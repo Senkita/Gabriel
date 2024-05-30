@@ -1,0 +1,7 @@
+groq
+cohere
+ffmpeg-python
+transformers
+optimum
+socksio
+python-dotenv
