@@ -5,9 +5,9 @@ from src import process_video
 
 
 def main() -> None:
-    video_files: list[str] = sorted(
+    video_files: list[Path] = sorted(
         [
-            str(object=video_file)
+            video_file
             for video_file in Path("videos").iterdir()
             if video_file.suffix == ".mp4"
         ]

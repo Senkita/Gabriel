@@ -7,6 +7,7 @@ LastEditors  : Senkita
 """
 
 import os
+from pathlib import Path
 from typing import Sequence
 
 import cohere
@@ -27,10 +28,10 @@ prompts: Sequence[ChatMessage] = [
 connectors: Sequence[ChatConnector] = [{"id": "web-search"}]
 
 
-def revise_text(raw_text_file: str) -> str:
-    output_file: str = raw_text_file.replace(".txt", ".md")
+def revise_text(raw_text_file: Path) -> Path:
+    output_file: Path = Path("texts", raw_text_file.stem + ".md")
 
-    title: str = raw_text_file.removeprefix("texts/").removesuffix(".txt")
+    title: str = Path(raw_text_file).stem
 
     with open(file=raw_text_file, mode="r", encoding="utf-8") as f:
         content: str = f.read()

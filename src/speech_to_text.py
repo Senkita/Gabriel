@@ -13,8 +13,8 @@ from transformers import pipeline
 from transformers.pipelines.base import Pipeline
 
 
-def speech_to_text(audio_file: str) -> str:
-    output_file: str = audio_file.replace(".aac", ".txt").replace("audios", "texts")
+def speech_to_text(audio_file: Path) -> Path:
+    output_file: Path = Path("texts", audio_file.stem + ".txt")
 
     Path("texts").mkdir(parents=True, exist_ok=True)
 
@@ -31,7 +31,7 @@ def speech_to_text(audio_file: str) -> str:
     )
 
     outputs = pipe(
-        audio_file,
+        str(object=audio_file),
         chunk_length_s=30,
         batch_size=24,
         return_timestamps=False,

@@ -11,16 +11,22 @@ from pathlib import Path
 import ffmpeg
 
 
-def extract_audio(video_file: str) -> str:
-    output_file: str = video_file.replace(".mp4", ".aac").replace("videos", "audios")
+def extract_audio(video_file: Path) -> Path:
+    output_tmp_file: Path = Path("audios", video_file.stem + "_tmp.aac")
 
     Path("audios").mkdir(parents=True, exist_ok=True)
 
     ffmpeg.input(filename=video_file).output(
-        output_file,
+        str(object=output_tmp_file),
         acodec="aac",  # 设置音频编码器为AAC
         audio_bitrate="192k",  # 设置音频比特率为192k
         ac=1,  # 设置音频通道为单声道
     ).run(overwrite_output=True)
+
+    output_file: Path = output_tmp_file.rename(
+        target=output_tmp_file.parent.joinpath(
+            output_tmp_file.stem.replace("_tmp", "") + output_tmp_file.suffix
+        )
+    )
 
     return output_file

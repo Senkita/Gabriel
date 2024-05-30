@@ -7,6 +7,7 @@ LastEditors  : Senkita
 """
 
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 from groq import Groq
@@ -17,10 +18,10 @@ load_dotenv(dotenv_path=".env")
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 
-def summarize_text(revised_text_file: str) -> None:
-    output_file: str = revised_text_file.replace(".md", "_summary.md")
+def summarize_text(revised_text_file: Path) -> None:
+    output_file: Path = Path("texts", revised_text_file.stem + "_summary.md")
 
-    title: str = revised_text_file.removeprefix("texts/").removesuffix(".md")
+    title: str = revised_text_file.stem
 
     with open(file=revised_text_file, mode="r", encoding="utf-8") as f:
         content: str = f.read()

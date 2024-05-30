@@ -6,34 +6,28 @@ from .speech_to_text import speech_to_text
 from .summarize_text import summarize_text
 
 
-def process_video(video_file: str) -> None:
-    file_name: str = Path(video_file).name
+def process_video(video_file: Path) -> None:
+    print(f"🚀 「{video_file.name}」开始处理...")
 
-    print(f"🚀 「{file_name}」开始处理...")
-
-    audio_file: str = (
+    audio_file: Path = (
         extract_audio(video_file=video_file)
-        if not Path(
-            video_file.replace(".mp4", ".aac").replace("videos", "audios")
-        ).exists()
-        else video_file.replace(".mp4", ".aac").replace("videos", "audios")
+        if not Path("audios", video_file.stem + ".aac").exists()
+        else Path("audios", video_file.stem + ".aac")
     )
 
-    raw_text_files: str = (
+    raw_text_file: Path = (
         speech_to_text(audio_file=audio_file)
-        if not Path(
-            audio_file.replace(".aac", ".txt").replace("audios", "texts")
-        ).exists()
-        else audio_file.replace(".aac", ".txt").replace("audios", "texts")
+        if not Path("texts", audio_file.stem + ".txt").exists()
+        else Path("texts", audio_file.stem + ".txt")
     )
 
-    revised_text_files: str = (
-        revise_text(raw_text_file=raw_text_files)
-        if not Path(raw_text_files.replace(".txt", ".md")).exists()
-        else raw_text_files.replace(".txt", ".md")
+    revised_text_file: Path = (
+        revise_text(raw_text_file=raw_text_file)
+        if not Path("texts", raw_text_file.stem + ".md").exists()
+        else Path("texts", raw_text_file.stem + ".md")
     )
 
-    if not Path(revised_text_files.replace(".md", "_summary.md")).exists():
-        summarize_text(revised_text_file=revised_text_files)
+    if not Path("texts", revised_text_file.stem + "_summary.md").exists():
+        summarize_text(revised_text_file=revised_text_file)
 
-    print(f"🎉 「{file_name}」处理完成！")
+    print(f"🎉 「{video_file.name}」处理完成！")
