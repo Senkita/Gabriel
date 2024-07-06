@@ -3,5 +3,6 @@ cohere
 ffmpeg-python
 transformers
 optimum
-socksio
+accelerate
+flash-attn
 python-dotenv
