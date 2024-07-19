@@ -9,7 +9,7 @@ def main() -> None:
         [
             video_file
             for video_file in Path("videos").iterdir()
-            if video_file.suffix == ".mp4"
+            if video_file.suffix == ".mp4" or ".wmv"
         ]
     )
 

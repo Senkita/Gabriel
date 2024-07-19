@@ -16,12 +16,15 @@ def extract_audio(video_file: Path) -> Path:
 
     Path("audios").mkdir(parents=True, exist_ok=True)
 
-    ffmpeg.input(filename=video_file,hwaccel='cuda', vcodec='h264_cuvid').output(
+    ffmpeg.input(
+        filename=video_file,
+        hwaccel="cuda",
+    ).output(
         str(object=output_tmp_file),
         acodec="aac",  # 设置音频编码器为AAC
         audio_bitrate="192k",  # 设置音频比特率为192k
         ac=1,  # 设置音频通道为单声道
-        vf='hwupload_cuda',
+        vf="hwupload_cuda",
     ).run(overwrite_output=True)
 
     output_file: Path = output_tmp_file.rename(
