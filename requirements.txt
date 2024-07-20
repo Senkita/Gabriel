@@ -1,8 +1,5 @@
-groq
-cohere
 ffmpeg-python
 transformers
 optimum
 accelerate
 flash-attn
-python-dotenv

@@ -1,47 +1,38 @@
-"""
-Author       : Senkita
-Date         : 2024-05-08 16:46:51
-Description  : 总结文稿
-LastEditTime : 2024-05-20 14:45:07
-LastEditors  : Senkita
-"""
-
-import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-from groq import Groq
-from groq.types.chat.chat_completion import ChatCompletion
+from requests import Response, post
 
-load_dotenv(dotenv_path=".env")
-
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+url: str = "http://localhost:11434/api/generate"
 
 
-def summarize_text(revised_text_file: Path) -> None:
-    output_file: Path = Path("texts", revised_text_file.stem + "_summary.md")
+def get_summarize_response(title: str, content: str) -> str:
+    data = {
+        "model": "qwen2",
+        "system": "# 角色\n\n你作为一名卓越的全栈专家，对软硬件开发有着深厚理解和实践经验，尤为擅长从繁杂的讯息中抽丝剥茧，提纲挈领。\n\n## 技能\n\n### 技能1: 总结讲稿\n\n- 用户会给你提供一份讲演稿，请你使用列表罗列出其中的全部知识点，并展开细节\n\n## 约束\n\n- 使用简体中文回复\n\n- 仅罗列知识点及其细节即可，其他无关信息都不要有\n\n- 不得遗漏相关知识点细节\n\n- 作为最后一道审验，你必须利用你的专业知识、现有知识库和网络搜索能力进行再三校对",
+        "prompt": f"讲演主题：《{title}》\n\n讲演内容：【{content}】",
+        "stream": False,
+    }
 
-    title: str = revised_text_file.stem
+    summarize_response: Response = post(url=url, json=data)
 
-    with open(file=revised_text_file, mode="r", encoding="utf-8") as f:
-        content: str = f.read()
+    if summarize_response.status_code == 200:
+        return summarize_response.json()["response"]
 
-    chat_completion: ChatCompletion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "system",
-                "content": "# 角色\n\n你作为一名卓越的全栈专家, 对全科领域有着深厚理解和实践经验。\n\n## 技能\n\n### 技能1: 总结文稿\n\n- 用户会给你提供发送一份文稿, 请你结合专业知识对其提纲挈领, 给出概述性总结。\n\n## 约束\n\n- 使用简体中文回复。\n\n- 不得遗漏相关技术细节。\n\n- 遵循Markdown格式排版。",
-            },
-            {
-                "role": "user",
-                "content": f"讲稿主题: 《{title}》\n讲稿内容: 「{content}」",
-            },
-        ],
-        temperature=0,
-        model="llama3-70b-8192",
-        max_tokens=32768,
-        stream=False,
-    )
+
+def summarize_text(
+    revised_chunk_files: list[Path], revised_text_file_stem: str
+) -> None:
+    output_file: Path = Path("texts", f"{revised_text_file_stem}_summary.md")
+    text: str = ""
+
+    for revised_chunk_file in revised_chunk_files:
+        title: str = Path(revised_chunk_file).stem
+
+        with open(file=revised_chunk_file, mode="r", encoding="utf-8") as f:
+            content: str = f.read()
+
+        summarize_response: str = get_summarize_response(title=title, content=content)
+        text += summarize_response
 
     with open(file=output_file, mode="w", encoding="utf-8") as f:
-        f.write(chat_completion.choices[0].message.content)
+        f.write(text)

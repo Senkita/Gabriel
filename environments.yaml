@@ -1,0 +1,47 @@
+name: Gabriel
+channels:
+  - defaults
+  - MindSpore
+  - Paddle
+  - auto
+  - biobakery
+  - bioconda
+  - c4aarch64
+  - caffe2
+  - conda-forge
+  - deepmodeling
+  - dglteam
+  - fastai
+  - fermi
+  - idaholab
+  - intel
+  - matsci
+  - menpo
+  - mordred-descriptor
+  - msys2
+  - numba
+  - ohmeta
+  - omnia
+  - peterjc123
+  - plotly
+  - psi4
+  - pytorch
+  - pytorch-lts
+  - pytorch-test
+  - pytorch3d
+  - pyviz
+  - qiime2
+  - rapidsai
+  - rdkit
+  - simpleitk
+  - stackless
+  - ursky
+  - nvidia
+dependencies:
+  - python
+  - ffmpeg-python
+  - transformers
+  - optimum
+  - accelerate
+  - flash-attn
+  - ruff
