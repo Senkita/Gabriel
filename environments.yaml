@@ -38,10 +38,8 @@ channels:
   - ursky
   - nvidia
 dependencies:
-  - python
   - ffmpeg-python
   - transformers
   - optimum
   - accelerate
   - flash-attn
-  - ruff

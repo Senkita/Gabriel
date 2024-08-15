@@ -20,6 +20,7 @@ def speech_to_text(audio_file: Path) -> Path:
 
     pipe: Pipeline = pipeline(
         "automatic-speech-recognition",
+        # model="distil-whisper/distil-large-v3",
         model="openai/whisper-large-v3",
         torch_dtype=torch.float16,
         device="cuda:0" if torch.cuda.is_available() else "cpu",
